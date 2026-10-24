@@ -1,0 +1,11 @@
+# LaTeX pagalbiniai failai
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+_word.tex
+
+# Python
+__pycache__/
