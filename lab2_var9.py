@@ -1,3 +1,4 @@
+# Edvin Katenel
 # II laboratorinis darbas, variantas 9
 # Koši uždavinys: u' = f(x, u), u(X0) = U0, X0 <= x <= X1
 # Metodai: 4-pakopis Rungės-Kuto (p = 4) ir dvipakopis RK su parametru sigma (p = 2)
@@ -19,7 +20,7 @@ X0, X1 = 0.0, 1.0                # intervalas [X0; X1]
 U0 = 0.0                         # pradinė sąlyga u(X0) = U0
 TAU = 0.05                       # mažesnis žingsnis; didesnis bus 2*TAU
 SIGMA = 0.5                      # dvipakopio metodo parametras
-RODYTI = True                    # True - grafikai atidaromi languose
+RODYTI = True
 #
 
 
@@ -53,7 +54,7 @@ def rk2(f, x0, u0, x1, tau, sigma=0.5):
     return x, y
 
 
-# ---------- skaičiavimai ----------
+#skaičiavimai 
 T1, T2 = 2 * TAU, TAU            # žingsniai 2*tau ir tau
 assert abs((X1 - X0) / T1 - round((X1 - X0) / T1)) < 1e-9, "intervalo ilgis turi dalintis iš 2*TAU"
 
@@ -62,12 +63,12 @@ for tau in (T1, T2):
     res[('RK4', tau)] = rk4(f, X0, U0, X1, tau)
     res[('RK2', tau)] = rk2(f, X0, U0, X1, tau, sigma=SIGMA)
 
-# Python funkcija: solve_ivp (Rungės-Kuto-Dormando-Princo RK45 metodas)
+#
 ref = solve_ivp(f, (X0, X1), [U0], method='RK45', rtol=1e-12, atol=1e-14, dense_output=True)
 u_ref = lambda x: ref.sol(x)[0]
 
 p = {'RK4': 4, 'RK2': 2}
-xg = res[('RK4', T1)][0]         # bendri tinklų taškai (stambesnio tinklo mazgai)
+xg = res[('RK4', T1)][0]
 
 print(f"Reikšmės tinklo taškuose (u({X0:g}) = {U0:g})")
 print(f"{'x':>6} | {'RK4 '+str(T1):>12} {'RK4 '+str(T2):>12} | {'RK2 '+str(T1):>12} {'RK2 '+str(T2):>12} | {'solve_ivp':>12}")
@@ -89,14 +90,14 @@ for m in ('RK4', 'RK2'):
     print(f"{m}: max Rungės įvertis ({X0:g};{X1:g}] = {runge[m][0][1:].max():.3e}, "
           f"max tikroji paklaida = {runge[m][1][1:].max():.3e}")
 
-# Tikrųjų paklaidų santykis taške x = X1, kai žingsnis sumažinamas perpus (turi būti ~2^p)
+#
 for m in ('RK4', 'RK2'):
     e1 = abs(res[(m, T1)][1][-1] - u_ref(X1))
     e2 = abs(res[(m, T2)][1][-1] - u_ref(X1))
     print(f"{m}: paklaida x={X1:g}: tau={T1:g} -> {e1:.3e}, tau={T2:g} -> {e2:.3e}, "
           f"santykis {e1/e2:.2f} (2^p = {2**p[m]})")
 
-# ---------- grafikai ----------
+# grafikai 
 plt.rcParams.update({"font.size": 11})
 xx = np.linspace(X0, X1, 400)
 names = {'RK4': '4-pakopis RK', 'RK2': rf'dvipakopis RK ($\sigma={SIGMA:g}$)'}
@@ -118,15 +119,13 @@ def two_panel(title, curves, fname):
     print("Išsaugota:", os.path.abspath(fname))
 
 
-# (a) metodas tas pats, skiriasi žingsnis
 for m, fn in (('RK4', 'fig_a_rk4.png'), ('RK2', 'fig_a_rk2.png')):
     two_panel(names[m] + f': žingsniai {T1:g} ir {T2:g}',
               [(*res[(m, T1)], rf'$\tau={T1:g}$', 'o--'), (*res[(m, T2)], rf'$\tau={T2:g}$', 's-')], fn)
 
-# (b) žingsnis tas pats, skiriasi metodas
 for tau, fn in ((T1, 'fig_b_2tau.png'), (T2, 'fig_b_tau.png')):
     two_panel(rf'$\tau={tau:g}$: 4-pakopis RK ir dvipakopis RK ($\sigma={SIGMA:g}$)',
               [(*res[('RK4', tau)], names['RK4'], 'o--'), (*res[('RK2', tau)], names['RK2'], 's-')], fn)
 
 if RODYTI:
-    plt.show()   # atidaro 4 langus; programa baigiasi, kai juos uždarote
+    plt.show()

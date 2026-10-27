@@ -13,7 +13,7 @@ palyginta su `scipy.integrate.solve_ivp` (RK45).
 | Failas | Kas tai |
 |---|---|
 | `lab2_var9.py` | programa (parametrai keičiami failo viršuje) |
-| `ataskaita.tex` / `ataskaita.pdf` / `ataskaita.docx` | ataskaita |
+| `ataskaita.tex` / `ataskaita.pdf` | ataskaita |
 | `fig_*.png` | grafikai |
 | `output.txt` | programos išvestis (lentelės) |
 | `make_docx.py` | `ataskaita.tex` → `ataskaita.docx` |
